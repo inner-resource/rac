@@ -7,7 +7,6 @@ import {
   SetStateAction,
 } from "react";
 
-import { objectToFormData } from "./utils";
 import { Form, isForm } from "./use_form";
 import { IHttpClient } from "./http_interface";
 const snakeCase = require("lodash.snakecase");
@@ -399,8 +398,7 @@ export function usePatchApi<T extends BaseResponse, U>(
     }
     setLoading(true);
     try {
-      const formData = objectToFormData(params);
-      const result = await httpClient.patch(apiPath, formData);
+      const result = await httpClient.patch(apiPath, params);
       const data: T = result.data;
       setResponse(() => data);
     } catch (e) {

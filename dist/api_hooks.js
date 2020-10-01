@@ -49,7 +49,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.useDeleteApi = exports.usePatchApi = exports.usePostApi = exports.useShowApi = exports.useIndexApi = exports.useApiState = void 0;
 var react_1 = require("react");
-var utils_1 = require("./utils");
 var snakeCase = require("lodash.snakecase");
 function useApiState() {
     var _a = react_1.useState(false), loading = _a[0], setLoading = _a[1];
@@ -313,7 +312,7 @@ function usePatchApi(httpClient, props) {
     var _a = useApiState(), loading = _a[0], setLoading = _a[1], apiError = _a[2], handleError = _a[3], isError = _a[4], isSuccess = _a[5];
     var _b = react_1.useState(props.initialResponse), response = _b[0], setResponse = _b[1];
     var execute = function (apiPath, params) { return __awaiter(_this, void 0, void 0, function () {
-        var formData, result, data_4, e_4;
+        var result, data_4, e_4;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -324,8 +323,7 @@ function usePatchApi(httpClient, props) {
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 3, , 4]);
-                    formData = utils_1.objectToFormData(params);
-                    return [4 /*yield*/, httpClient.patch(apiPath, formData)];
+                    return [4 /*yield*/, httpClient.patch(apiPath, params)];
                 case 2:
                     result = _a.sent();
                     data_4 = result.data;
