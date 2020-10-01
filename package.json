@@ -19,7 +19,7 @@
     "@types/react": "^16.9.49",
     "lodash.snakecase": "^4.1.1",
     "qs": "^6.9.4",
-    "react": "^16.13.1",
+    "react": "16.13.0",
     "typescript": "^4.0.3"
   }
 }
