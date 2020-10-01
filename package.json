@@ -2,7 +2,7 @@
   "name": "rac",
   "version": "1.0.0",
   "description": "reprua api component",
-  "main": "index.js",
+  "main": "index.ts",
   "author": "YutoTani",
   "license": "MIT",
   "private": true,
