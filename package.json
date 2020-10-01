@@ -1,16 +1,25 @@
 {
   "name": "rac",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "reprua api component",
-  "main": "index.ts",
+  "main": "dist/index.js",
   "author": "YutoTani",
   "license": "MIT",
   "private": true,
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
   "dependencies": {
     "@types/lodash.snakecase": "^4.1.6",
     "@types/node": "^14.11.2",
+    "@types/react": "^16.9.49",
     "lodash.snakecase": "^4.1.1",
     "qs": "^6.9.4",
-    "react": "^16.13.1"
+    "react": "^16.13.1",
+    "typescript": "^4.0.3"
   }
 }
