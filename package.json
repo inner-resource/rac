@@ -1,0 +1,16 @@
+{
+  "name": "rac",
+  "version": "1.0.0",
+  "description": "reprua api component",
+  "main": "index.js",
+  "author": "YutoTani",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "@types/lodash.snakecase": "^4.1.6",
+    "@types/node": "^14.11.2",
+    "lodash.snakecase": "^4.1.1",
+    "qs": "^6.9.4",
+    "react": "^16.13.1"
+  }
+}
