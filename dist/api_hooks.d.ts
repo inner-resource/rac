@@ -86,7 +86,7 @@ export declare function usePostApi<T extends BaseResponse, U>(httpClient: IHttpC
     execute: (apiPath: string, form?: Form<U>) => void;
 };
 export declare function usePatchApi<T extends BaseResponse, U>(httpClient: IHttpClient, props: ApiArgument<T>): ApiSet<T> & {
-    execute: (apiPath: string, formOrParams?: Form<U> | U) => void;
+    execute: (apiPath: string, params?: U) => void;
 };
 export declare function useDeleteApi<T extends BaseResponse>(httpClient: IHttpClient, props: ApiArgument<T>): ApiSet<T> & {
     execute: (apiPath: string) => void;

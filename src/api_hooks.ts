@@ -381,7 +381,7 @@ export function usePatchApi<T extends BaseResponse, U>(
   httpClient: IHttpClient,
   props: ApiArgument<T>
 ): ApiSet<T> & {
-  execute: (apiPath: string, formOrParams?: Form<U> | U) => void;
+  execute: (apiPath: string, params?: U) => void;
 } {
   const [
     loading,
@@ -393,19 +393,12 @@ export function usePatchApi<T extends BaseResponse, U>(
   ] = useApiState();
   const [response, setResponse] = useState<T>(props.initialResponse);
 
-  const execute = async (apiPath: string, formOrParams?: Form<U> | U) => {
+  const execute = async (apiPath: string, params?: U) => {
     if (loading) {
       return;
     }
     setLoading(true);
     try {
-      let params;
-      if (isForm(formOrParams)) {
-        params = formOrParams.object;
-      } else {
-        params = formOrParams;
-      }
-
       const formData = objectToFormData(params);
       const result = await httpClient.patch(apiPath, formData);
       const data: T = result.data;
