@@ -22,6 +22,7 @@ export type ApiSet<T> = {
   response: T;
   setResponse: Dispatch<SetStateAction<T>>;
   isError: boolean;
+  isSuccess: () => boolean;
 };
 
 export type IndexApiSet<T> = ApiSet<T> & {
@@ -180,7 +181,14 @@ export function useIndexApi<T extends BaseResponse, U>(
 ): IndexApiSet<T> & {
   execute: (path: string, options?: { params?: U }) => void;
 } {
-  const [loading, setLoading, apiError, handleError, isError] = useApiState();
+  const [
+    loading,
+    setLoading,
+    apiError,
+    handleError,
+    isError,
+    isSuccess,
+  ] = useApiState();
   const [response, setResponse] = useState<T>(props.initialResponse);
   const [indexApiState, dispatch] = useReducer(
     indexReducer,
@@ -283,6 +291,7 @@ export function useIndexApi<T extends BaseResponse, U>(
     orderSet: orderSet,
     setState: setState,
     isError: isError,
+    isSuccess: isSuccess,
   };
 }
 
@@ -294,7 +303,14 @@ export function useShowApi<T extends BaseResponse, U>(
   httpClient: IHttpClient,
   props: ApiArgument<T>
 ): ApiSet<T> & { execute: (apiPath: string, params?: U) => void } {
-  const [loading, setLoading, apiError, handleError, isError] = useApiState();
+  const [
+    loading,
+    setLoading,
+    apiError,
+    handleError,
+    isError,
+    isSuccess,
+  ] = useApiState();
   const [response, setResponse] = useState<T>(props.initialResponse);
 
   const execute = useCallback(async (apiPath: string, params?: U) => {
@@ -316,6 +332,7 @@ export function useShowApi<T extends BaseResponse, U>(
     setResponse: setResponse,
     execute: execute,
     isError: isError,
+    isSuccess: isSuccess,
   };
 }
 
@@ -323,7 +340,14 @@ export function usePostApi<T extends BaseResponse, U>(
   httpClient: IHttpClient,
   props: ApiArgument<T>
 ): ApiSet<T> & { execute: (apiPath: string, form?: Form<U>) => void } {
-  const [loading, setLoading, apiError, handleError, isError] = useApiState();
+  const [
+    loading,
+    setLoading,
+    apiError,
+    handleError,
+    isError,
+    isSuccess,
+  ] = useApiState();
   const [response, setResponse] = useState<T>(props.initialResponse);
 
   const execute = async (apiPath: string, form?: Form<U>) => {
@@ -349,6 +373,7 @@ export function usePostApi<T extends BaseResponse, U>(
     setResponse: setResponse,
     execute: execute,
     isError: isError,
+    isSuccess: isSuccess,
   };
 }
 
@@ -358,7 +383,14 @@ export function usePatchApi<T extends BaseResponse, U>(
 ): ApiSet<T> & {
   execute: (apiPath: string, formOrParams?: Form<U> | U) => void;
 } {
-  const [loading, setLoading, apiError, handleError, isError] = useApiState();
+  const [
+    loading,
+    setLoading,
+    apiError,
+    handleError,
+    isError,
+    isSuccess,
+  ] = useApiState();
   const [response, setResponse] = useState<T>(props.initialResponse);
 
   const execute = async (apiPath: string, formOrParams?: Form<U> | U) => {
@@ -391,6 +423,7 @@ export function usePatchApi<T extends BaseResponse, U>(
     setResponse: setResponse,
     execute: execute,
     isError: isError,
+    isSuccess: isSuccess,
   };
 }
 
@@ -398,7 +431,14 @@ export function useDeleteApi<T extends BaseResponse>(
   httpClient: IHttpClient,
   props: ApiArgument<T>
 ): ApiSet<T> & { execute: (apiPath: string) => void } {
-  const [loading, setLoading, apiError, handleError, isError] = useApiState();
+  const [
+    loading,
+    setLoading,
+    apiError,
+    handleError,
+    isError,
+    isSuccess,
+  ] = useApiState();
   const [response, setResponse] = useState<T>(props.initialResponse);
 
   const execute = async (apiPath: string) => {
@@ -423,5 +463,6 @@ export function useDeleteApi<T extends BaseResponse>(
     setResponse: setResponse,
     execute: execute,
     isError: isError,
+    isSuccess: isSuccess,
   };
 }
