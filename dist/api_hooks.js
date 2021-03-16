@@ -206,7 +206,7 @@ function useIndexApi(httpClient, props) {
                     return [4 /*yield*/, httpClient.get(path, params)];
                 case 2:
                     result = _a.sent();
-                    setStatusCode(result.statusCode);
+                    setStatusCode(result.status);
                     data_1 = result.data;
                     setResponse(function () { return data_1; });
                     return [3 /*break*/, 4];
@@ -253,7 +253,7 @@ function useShowApi(httpClient, props) {
                     return [4 /*yield*/, httpClient.get(apiPath, params)];
                 case 2:
                     result = _a.sent();
-                    setStatusCode(result.statusCode);
+                    setStatusCode(result.status);
                     data_2 = result.data;
                     setResponse(function () { return data_2; });
                     return [3 /*break*/, 4];
@@ -300,7 +300,7 @@ function usePostApi(httpClient, props) {
                     return [4 /*yield*/, httpClient.post(apiPath, form === null || form === void 0 ? void 0 : form.object)];
                 case 2:
                     result = _a.sent();
-                    setStatusCode(result.statusCode);
+                    setStatusCode(result.status);
                     data_3 = result.data;
                     setResponse(function () { return data_3; });
                     form === null || form === void 0 ? void 0 : form.resetForm();
@@ -348,7 +348,7 @@ function usePatchApi(httpClient, props) {
                     return [4 /*yield*/, httpClient.patch(apiPath, params)];
                 case 2:
                     result = _a.sent();
-                    setStatusCode(result.statusCode);
+                    setStatusCode(result.status);
                     data_4 = result.data;
                     setResponse(function () { return data_4; });
                     return [3 /*break*/, 4];
@@ -395,7 +395,7 @@ function useDeleteApi(httpClient, props) {
                     return [4 /*yield*/, httpClient.delete(apiPath)];
                 case 2:
                     result = _a.sent();
-                    setStatusCode(result.statusCode);
+                    setStatusCode(result.status);
                     data_5 = result.data;
                     setResponse(function () { return data_5; });
                     return [3 /*break*/, 4];

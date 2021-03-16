@@ -288,7 +288,7 @@ export function useIndexApi<T extends BaseResponse, U>(
       }
 
       const result = await httpClient.get(path, params);
-      setStatusCode(result.statusCode);
+      setStatusCode(result.status);
       const data: T = result.data;
 
       setResponse(() => data);
@@ -340,7 +340,7 @@ export function useShowApi<T extends BaseResponse, U>(
     setLoading(true);
     try {
       const result = await httpClient.get(apiPath, params);
-      setStatusCode(result.statusCode);
+      setStatusCode(result.status);
       const data: T = result.data;
       setResponse(() => data);
     } catch (e) {
@@ -387,7 +387,7 @@ export function usePostApi<T extends BaseResponse, U>(
     setLoading(true);
     try {
       const result = await httpClient.post(apiPath, form?.object);
-      setStatusCode(result.statusCode);
+      setStatusCode(result.status);
       const data: T = result.data;
       setResponse(() => data);
       form?.resetForm();
@@ -437,7 +437,7 @@ export function usePatchApi<T extends BaseResponse, U>(
     setLoading(true);
     try {
       const result = await httpClient.patch(apiPath, params);
-      setStatusCode(result.statusCode);
+      setStatusCode(result.status);
       const data: T = result.data;
       setResponse(() => data);
     } catch (e) {
@@ -484,7 +484,7 @@ export function useDeleteApi<T extends BaseResponse>(
     setLoading(true);
     try {
       const result = await httpClient.delete(apiPath);
-      setStatusCode(result.statusCode);
+      setStatusCode(result.status);
       const data: T = result.data;
       setResponse(() => data);
     } catch (e) {
