@@ -22,6 +22,8 @@ export type ApiSet<T> = {
   setResponse: Dispatch<SetStateAction<T>>;
   isError: boolean;
   isSuccess: () => boolean;
+  isFailure: () => boolean;
+  statusCode: number
 };
 
 export type IndexApiSet<T> = ApiSet<T> & {
@@ -46,7 +48,9 @@ export function useApiState(): [
   ApiError,
   (error: any) => void,
   boolean,
-  () => boolean
+  () => boolean,
+  () => boolean,
+  number
 ] {
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState<ApiError>({
@@ -55,25 +59,23 @@ export function useApiState(): [
     details: {},
   });
   const [isError, setIsError] = useState<boolean>(false);
+  const [statusCode, setStatusCode] = useState<number>(0)
 
   const handleError = (error: any) => {
+    setStatusCode(error?.response?.status)
     if (error && error.response) {
-      if (error?.response?.status == 401) {
-        const message = error.response.data?.message
-          ? error.response.data?.message
-          : "認証エラーが発生しました。再度ログインしてください";
-        window.location.href = `/auth_error?message=${message}`;
-        return;
-      }
-
       setApiError(() => error.response.data);
       setIsError(true);
     }
   };
 
   const isSuccess = () => {
-    return !loading && !isError;
+    return !loading && statusCode >=  200 && statusCode < 300;
   };
+
+  const isFailure = () => {
+    return !loading && statusCode >= 300
+  }
 
   useEffect(() => {
     if (loading) {
@@ -83,7 +85,7 @@ export function useApiState(): [
     }
   }, [loading]);
 
-  return [loading, setLoading, apiError, handleError, isError, isSuccess];
+  return [loading, setLoading, apiError, handleError, isError, isSuccess, isFailure, statusCode];
 }
 
 type RansackOrderParams = {
@@ -187,6 +189,8 @@ export function useIndexApi<T extends BaseResponse, U>(
     handleError,
     isError,
     isSuccess,
+    isFailure,
+    statusCode,
   ] = useApiState();
   const [response, setResponse] = useState<T>(props.initialResponse);
   const [indexApiState, dispatch] = useReducer(
@@ -291,6 +295,8 @@ export function useIndexApi<T extends BaseResponse, U>(
     setState: setState,
     isError: isError,
     isSuccess: isSuccess,
+    isFailure,
+    statusCode,
   };
 }
 
@@ -309,6 +315,8 @@ export function useShowApi<T extends BaseResponse, U>(
     handleError,
     isError,
     isSuccess,
+    isFailure,
+    statusCode,
   ] = useApiState();
   const [response, setResponse] = useState<T>(props.initialResponse);
 
@@ -332,6 +340,8 @@ export function useShowApi<T extends BaseResponse, U>(
     execute: execute,
     isError: isError,
     isSuccess: isSuccess,
+    isFailure,
+    statusCode,
   };
 }
 
@@ -346,6 +356,8 @@ export function usePostApi<T extends BaseResponse, U>(
     handleError,
     isError,
     isSuccess,
+    isFailure,
+    statusCode,
   ] = useApiState();
   const [response, setResponse] = useState<T>(props.initialResponse);
 
@@ -373,6 +385,8 @@ export function usePostApi<T extends BaseResponse, U>(
     execute: execute,
     isError: isError,
     isSuccess: isSuccess,
+    isFailure,
+    statusCode,
   };
 }
 
@@ -389,6 +403,8 @@ export function usePatchApi<T extends BaseResponse, U>(
     handleError,
     isError,
     isSuccess,
+    isFailure,
+    statusCode,
   ] = useApiState();
   const [response, setResponse] = useState<T>(props.initialResponse);
 
@@ -415,6 +431,8 @@ export function usePatchApi<T extends BaseResponse, U>(
     execute: execute,
     isError: isError,
     isSuccess: isSuccess,
+    isFailure,
+    statusCode,
   };
 }
 
@@ -429,6 +447,8 @@ export function useDeleteApi<T extends BaseResponse>(
     handleError,
     isError,
     isSuccess,
+    isFailure,
+    statusCode,
   ] = useApiState();
   const [response, setResponse] = useState<T>(props.initialResponse);
 
@@ -455,5 +475,7 @@ export function useDeleteApi<T extends BaseResponse>(
     execute: execute,
     isError: isError,
     isSuccess: isSuccess,
+    isFailure,
+    statusCode,
   };
 }

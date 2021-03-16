@@ -11,6 +11,8 @@ export declare type ApiSet<T> = {
     setResponse: Dispatch<SetStateAction<T>>;
     isError: boolean;
     isSuccess: () => boolean;
+    isFailure: () => boolean;
+    statusCode: number;
 };
 export declare type IndexApiSet<T> = ApiSet<T> & {
     pageSet: PageSet;
@@ -36,7 +38,9 @@ export declare function useApiState(): [
     ApiError,
     (error: any) => void,
     boolean,
-    () => boolean
+    () => boolean,
+    () => boolean,
+    number
 ];
 declare type RansackOrderParams = {
     s?: string;
