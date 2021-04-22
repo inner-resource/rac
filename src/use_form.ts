@@ -67,7 +67,7 @@ export function useForm<T>(initialForm: T, modelName?: string): Form<T> {
         attr.map((a, index) => {
           if (index + 1 == attr.length) {
             if (!value && (typeof value != "number" || isNaN(value))) {
-              selectObj[a] = null;
+              selectObj[a] = "";
             } else {
               selectObj[a] = value;
             }
@@ -78,7 +78,7 @@ export function useForm<T>(initialForm: T, modelName?: string): Form<T> {
       } else {
         let selectObj = copledForm as { [key: string]: any };
         if (!value && (typeof value != "number" || isNaN(value))) {
-          selectObj[attr as string] = null;
+          selectObj[attr as string] = "";
         } else {
           selectObj[attr as string] = value;
         }

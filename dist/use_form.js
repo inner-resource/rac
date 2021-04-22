@@ -49,7 +49,7 @@ function useForm(initialForm, modelName) {
                 attr.map(function (a, index) {
                     if (index + 1 == attr.length) {
                         if (!value && (typeof value != "number" || isNaN(value))) {
-                            selectObj_1[a] = null;
+                            selectObj_1[a] = "";
                         }
                         else {
                             selectObj_1[a] = value;
@@ -63,7 +63,7 @@ function useForm(initialForm, modelName) {
             else {
                 var selectObj = copledForm;
                 if (!value && (typeof value != "number" || isNaN(value))) {
-                    selectObj[attr] = null;
+                    selectObj[attr] = "";
                 }
                 else {
                     selectObj[attr] = value;
