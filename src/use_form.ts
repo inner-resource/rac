@@ -66,14 +66,22 @@ export function useForm<T>(initialForm: T, modelName?: string): Form<T> {
         let selectObj = copledForm as { [key: string]: any };
         attr.map((a, index) => {
           if (index + 1 == attr.length) {
-            selectObj[a] = value;
+            if (!value && typeof value != "number") {
+              delete selectObj[a];
+            } else {
+              selectObj[a] = value;
+            }
           } else {
             selectObj = selectObj[a] as { [key: string]: any };
           }
         });
       } else {
         let selectObj = copledForm as { [key: string]: any };
-        selectObj[attr as string] = value;
+        if (!value && typeof value != "number") {
+          delete selectObj[attr as string];
+        } else {
+          selectObj[attr as string] = value;
+        }
       }
     } else {
       throw "updateArray method require form type object";

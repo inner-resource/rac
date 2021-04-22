@@ -48,7 +48,12 @@ function useForm(initialForm, modelName) {
                 var selectObj_1 = copledForm;
                 attr.map(function (a, index) {
                     if (index + 1 == attr.length) {
-                        selectObj_1[a] = value;
+                        if (!value && typeof value != "number") {
+                            delete selectObj_1[a];
+                        }
+                        else {
+                            selectObj_1[a] = value;
+                        }
                     }
                     else {
                         selectObj_1 = selectObj_1[a];
@@ -57,7 +62,12 @@ function useForm(initialForm, modelName) {
             }
             else {
                 var selectObj = copledForm;
-                selectObj[attr] = value;
+                if (!value && typeof value != "number") {
+                    delete selectObj[attr];
+                }
+                else {
+                    selectObj[attr] = value;
+                }
             }
         }
         else {
