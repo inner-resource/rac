@@ -41,6 +41,8 @@ function useForm(initialForm, modelName) {
         setter(copledForm);
         setForm(function () { return copledForm; });
     };
+
+    /** @deprecated */
     var updateObject = function (attr, value) {
         var copledForm = copyForm();
         if (copledForm instanceof Object) {
@@ -75,6 +77,50 @@ function useForm(initialForm, modelName) {
         }
         setForm(function () { return copledForm; });
     };
+
+    var newUpdateObject = function (attr, value) {
+        var copiedForm = copyForm();
+        if (copiedForm instanceof Object) {
+            if (attr instanceof Array) {
+                var selectObj_1 = copiedForm;
+                attr.map(function (a, index) {
+                    console.log(typeof value)
+                    if (index + 1 == attr.length) {
+                        if (typeof value === "boolean"){
+                            selectObj_1[a] = value;
+                        }
+                        else if (!value && (typeof value != "number" || isNaN(value))) {
+                            selectObj_1[a] = "";
+                        }
+                        else {
+                            selectObj_1[a] = value;
+                        }
+                    }
+                    else {
+                        selectObj_1 = selectObj_1[a];
+                    }
+                });
+            }
+            else {
+                var selectObj = copiedForm;
+                if (typeof value === "boolean"){
+                    console.log(typeof value)
+                    selectObj[attr] = value;
+                }
+                else if (!value && (typeof value != "number" || isNaN(value))) {
+                    selectObj[attr] = "";
+                }
+                else {
+                    selectObj[attr] = value;
+                }
+            }
+        }
+        else {
+            throw "updateArray method require form type object";
+        }
+        setForm(function () { return copiedForm; });
+    };
+
     var getObjectValue = function (attr) {
         var returnValue = null;
         if (form instanceof Object) {
@@ -108,12 +154,14 @@ function useForm(initialForm, modelName) {
         set: setForm,
         update: updateForm,
         updateObject: updateObject,
+        newUpdateObject: newUpdateObject,
         getValue: getValue,
         resetForm: resetForm,
     };
 }
 exports.useForm = useForm;
 exports.useNestedForm = function (form, modelName) {
+    /** @deprecated */
     var updateObject = function (attr, value) {
         if (typeof attr == "string") {
             form.updateObject([modelName, attr], value);
@@ -122,6 +170,16 @@ exports.useNestedForm = function (form, modelName) {
             form.updateObject(__spreadArrays([modelName], attr), value);
         }
     };
+
+    var newUpdateObject = function (attr, value) {
+        if (typeof attr == "string") {
+            form.newUpdateObject([modelName, attr], value);
+        }
+        else {
+            form.newUpdateObject(__spreadArrays([modelName], attr), value);
+        }
+    };
+
     var getValue = function (attr) {
         if (typeof attr == "string") {
             return form.getValue([modelName, attr]);
@@ -141,6 +199,7 @@ exports.useNestedForm = function (form, modelName) {
         object: getObject(),
         modelName: modelName,
         updateObject: updateObject,
+        newUpdateObject: newUpdateObject,
         getValue: getValue,
     };
 };
