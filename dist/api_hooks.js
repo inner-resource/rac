@@ -123,6 +123,38 @@ var indexReducer = function (state, action) {
             return state;
     }
 };
+var isSearchQueryTuple = function (arg) {
+    return arg[0] !== undefined && arg[1] !== undefined;
+};
+var parseSearchQuery = function (query) {
+    var _a;
+    var queryKeys = [];
+    var modelNameStack = [];
+    var pushKey = function (attrs) {
+        attrs.forEach(function (attr) {
+            if (typeof attr === "string") {
+                queryKeys.push((modelNameStack.join("") + snakeCase(attr)));
+            }
+            else if (isSearchQueryTuple(attr)) {
+                var polymorphicType = attr[1].polymorphicType;
+                if (polymorphicType) {
+                    var polymorphicModelName = snakeCase(attr[0]) + "_of_" + polymorphicType + "_type";
+                    modelNameStack.push(polymorphicModelName + "_");
+                }
+                else {
+                    modelNameStack.push(snakeCase(attr[0]) + "_");
+                }
+                pushKey(attr[1].attrs);
+                modelNameStack.pop();
+            }
+        });
+    };
+    pushKey(query.attrs);
+    var queryKey = queryKeys.join("_or_") + "_" + snakeCase(query.suffix);
+    return _a = {},
+        _a[queryKey] = query.searchText,
+        _a;
+};
 /**
  * IndexでつかうApiSetを返す
  */
@@ -200,7 +232,12 @@ function useIndexApi(httpClient, props) {
                     });
                     if (options === null || options === void 0 ? void 0 : options.params) {
                         // 追加でparamsの指定がある場合
-                        params = __assign(__assign({}, params), options.params);
+                        if (options.searchQuery) {
+                            params = __assign(__assign(__assign({}, params), options.params), { searchQuery: parseSearchQuery(options.searchQuery) });
+                        }
+                        else {
+                            params = __assign(__assign({}, params), options.params);
+                        }
                         params.q = __assign(__assign({}, params.q), { s: snakeCase(indexApiState.orderBy) + " " + indexApiState.order });
                     }
                     return [4 /*yield*/, httpClient.get(path, params)];
