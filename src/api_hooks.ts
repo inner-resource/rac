@@ -181,6 +181,58 @@ const indexReducer = (
       return state;
   }
 };
+
+const isSearchQueryTuple = (arg: any): arg is SearchQueryTuple => {
+  return arg[0] !== undefined && arg[1] !== undefined;
+};
+
+export type SearchQuery = {
+  suffix: "Cont" | "HasEveryTerm"; // 検索末尾に付ける修飾子（ex. Cont, HasEveryTerm）
+  attrs: SearchQueryAttributes;
+  searchText: string;
+};
+
+type SearchQueryAttributes = (string | SearchQueryTuple)[];
+type SearchQueryTuple = [
+  string,
+  { attrs: SearchQueryAttributes; polymorphicType?: string }
+];
+
+const parseSearchQuery = (query: SearchQuery) => {
+  const queryKeys: string[] = [];
+  const modelNameStack: string[] = [];
+
+  const pushKey = (attrs: SearchQueryAttributes) => {
+    attrs.forEach((attr) => {
+      if (typeof attr === "string") {
+        queryKeys.push((modelNameStack.join("") + snakeCase(attr)) as string);
+      } else if (isSearchQueryTuple(attr)) {
+        const polymorphicType = attr[1].polymorphicType;
+        if (polymorphicType) {
+          const polymorphicModelName =
+            snakeCase(attr[0]) + "_of_" + polymorphicType + "_type";
+          modelNameStack.push(polymorphicModelName + "_");
+        } else {
+          modelNameStack.push(snakeCase(attr[0]) + "_");
+        }
+        pushKey(attr[1].attrs);
+        modelNameStack.pop();
+      }
+    });
+  };
+
+  pushKey(query.attrs);
+  const queryKey = queryKeys.join("_or_") + "_" + snakeCase(query.suffix);
+
+  return {
+    [queryKey]: query.searchText,
+  };
+};
+
+type IndexApiExecuteOptions<T> = {
+  params?: T;
+  searchQuery?: SearchQuery;
+};
 /**
  * IndexでつかうApiSetを返す
  */
@@ -192,7 +244,7 @@ export function useIndexApi<T extends BaseResponse, U>(
     params?: U;
   }
 ): IndexApiSet<T> & {
-  execute: (path: string, options?: { params?: U }) => void;
+  execute: (path: string, options?: IndexApiExecuteOptions<U>) => void;
 } {
   const [
     loading,
@@ -263,7 +315,7 @@ export function useIndexApi<T extends BaseResponse, U>(
     changeOrder: changeOrder,
   };
 
-  const execute = async (path: string, options?: { params?: U }) => {
+  const execute = async (path: string, options?: IndexApiExecuteOptions<U>) => {
     if (loading) {
       return;
     }
@@ -280,7 +332,15 @@ export function useIndexApi<T extends BaseResponse, U>(
       };
       if (options?.params) {
         // 追加でparamsの指定がある場合
-        params = { ...params, ...options.params };
+        if (options.searchQuery) {
+          params = {
+            ...params,
+            ...options.params,
+            searchQuery: parseSearchQuery(options.searchQuery),
+          };
+        } else {
+          params = { ...params, ...options.params };
+        }
         params.q = {
           ...params.q,
           s: `${snakeCase(indexApiState.orderBy)} ${indexApiState.order}`,

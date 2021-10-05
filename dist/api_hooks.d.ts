@@ -70,6 +70,23 @@ export declare type IndexApiState = {
     order: Order;
     orderBy: string;
 };
+export declare type SearchQuery = {
+    suffix: "Cont" | "HasEveryTerm";
+    attrs: SearchQueryAttributes;
+    searchText: string;
+};
+declare type SearchQueryAttributes = (string | SearchQueryTuple)[];
+declare type SearchQueryTuple = [
+    string,
+    {
+        attrs: SearchQueryAttributes;
+        polymorphicType?: string;
+    }
+];
+declare type IndexApiExecuteOptions<T> = {
+    params?: T;
+    searchQuery?: SearchQuery;
+};
 /**
  * IndexでつかうApiSetを返す
  */
@@ -78,9 +95,7 @@ export declare function useIndexApi<T extends BaseResponse, U>(httpClient: IHttp
     initialState?: Partial<IndexApiState>;
     params?: U;
 }): IndexApiSet<T> & {
-    execute: (path: string, options?: {
-        params?: U;
-    }) => void;
+    execute: (path: string, options?: IndexApiExecuteOptions<U>) => void;
 };
 export declare type ApiArgument<T> = {
     initialResponse: T;
