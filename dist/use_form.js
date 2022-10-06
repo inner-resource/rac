@@ -1,10 +1,12 @@
 "use strict";
-var __spreadArrays = (this && this.__spreadArrays) || function () {
-    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
-    for (var r = Array(s), k = 0, i = 0; i < il; i++)
-        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
-            r[k] = a[j];
-    return r;
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.convertRansackQueryParams = exports.useNestedForm = exports.useForm = exports.isForm = void 0;
@@ -24,7 +26,7 @@ exports.isForm = isForm;
  * @param modelName
  */
 function useForm(initialForm, modelName) {
-    var _a = react_1.useState(initialForm), form = _a[0], setForm = _a[1];
+    var _a = (0, react_1.useState)(initialForm), form = _a[0], setForm = _a[1];
     var resetForm = function () {
         setForm(function () { return initialForm; });
     };
@@ -41,8 +43,6 @@ function useForm(initialForm, modelName) {
         setter(copledForm);
         setForm(function () { return copledForm; });
     };
-
-    /** @deprecated */
     var updateObject = function (attr, value) {
         var copledForm = copyForm();
         if (copledForm instanceof Object) {
@@ -77,50 +77,6 @@ function useForm(initialForm, modelName) {
         }
         setForm(function () { return copledForm; });
     };
-
-    var newUpdateObject = function (attr, value) {
-        var copiedForm = copyForm();
-        if (copiedForm instanceof Object) {
-            if (attr instanceof Array) {
-                var selectObj_1 = copiedForm;
-                attr.map(function (a, index) {
-                    console.log(typeof value)
-                    if (index + 1 == attr.length) {
-                        if (typeof value === "boolean"){
-                            selectObj_1[a] = value;
-                        }
-                        else if (!value && (typeof value != "number" || isNaN(value))) {
-                            selectObj_1[a] = "";
-                        }
-                        else {
-                            selectObj_1[a] = value;
-                        }
-                    }
-                    else {
-                        selectObj_1 = selectObj_1[a];
-                    }
-                });
-            }
-            else {
-                var selectObj = copiedForm;
-                if (typeof value === "boolean"){
-                    console.log(typeof value)
-                    selectObj[attr] = value;
-                }
-                else if (!value && (typeof value != "number" || isNaN(value))) {
-                    selectObj[attr] = "";
-                }
-                else {
-                    selectObj[attr] = value;
-                }
-            }
-        }
-        else {
-            throw "updateArray method require form type object";
-        }
-        setForm(function () { return copiedForm; });
-    };
-
     var getObjectValue = function (attr) {
         var returnValue = null;
         if (form instanceof Object) {
@@ -154,38 +110,26 @@ function useForm(initialForm, modelName) {
         set: setForm,
         update: updateForm,
         updateObject: updateObject,
-        newUpdateObject: newUpdateObject,
         getValue: getValue,
         resetForm: resetForm,
     };
 }
 exports.useForm = useForm;
-exports.useNestedForm = function (form, modelName) {
-    /** @deprecated */
+var useNestedForm = function (form, modelName) {
     var updateObject = function (attr, value) {
         if (typeof attr == "string") {
             form.updateObject([modelName, attr], value);
         }
         else {
-            form.updateObject(__spreadArrays([modelName], attr), value);
+            form.updateObject(__spreadArray([modelName], attr, true), value);
         }
     };
-
-    var newUpdateObject = function (attr, value) {
-        if (typeof attr == "string") {
-            form.newUpdateObject([modelName, attr], value);
-        }
-        else {
-            form.newUpdateObject(__spreadArrays([modelName], attr), value);
-        }
-    };
-
     var getValue = function (attr) {
         if (typeof attr == "string") {
             return form.getValue([modelName, attr]);
         }
         else {
-            return form.getValue(__spreadArrays([modelName], attr));
+            return form.getValue(__spreadArray([modelName], attr, true));
         }
     };
     var getObject = function () {
@@ -199,10 +143,11 @@ exports.useNestedForm = function (form, modelName) {
         object: getObject(),
         modelName: modelName,
         updateObject: updateObject,
-        newUpdateObject: newUpdateObject,
         getValue: getValue,
     };
 };
-exports.convertRansackQueryParams = function (searchForm) {
+exports.useNestedForm = useNestedForm;
+var convertRansackQueryParams = function (searchForm) {
     return { q: searchForm.object };
 };
+exports.convertRansackQueryParams = convertRansackQueryParams;

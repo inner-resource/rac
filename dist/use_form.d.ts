@@ -6,9 +6,7 @@ export declare type Form<T> = {
     modelName?: string;
     set: Dispatch<SetStateAction<T>>;
     update: (setter: (f: T) => void) => void;
-    /** @deprecated */
     updateObject: (attr: FormAttrType<T>, value: ParseableValue) => void;
-    newUpdateObject: (attr: FormAttrType<T>, value: ParseableValue) => void;
     getValue: (attr: FormAttrType<T>) => ParseableValue;
     resetForm: () => void;
 };
@@ -24,9 +22,7 @@ export declare function useForm<T>(initialForm: T, modelName?: string): Form<T>;
 export declare type NestedForm<U> = {
     object?: U;
     modelName?: string;
-    /** @deprecated */
     updateObject: (attr: FormAttrType<U>, value: ParseableValue) => void;
-    newUpdateObject: (attr: FormAttrType<T>, value: ParseableValue) => void;
     getValue: (attr: FormAttrType<U>) => ParseableValue;
 };
 export declare const useNestedForm: <T, U>(form: Form<T>, modelName: string) => NestedForm<U>;

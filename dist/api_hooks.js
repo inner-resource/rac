@@ -51,14 +51,14 @@ exports.useDeleteApi = exports.usePatchApi = exports.usePostApi = exports.useSho
 var react_1 = require("react");
 var snakeCase = require("lodash.snakecase");
 function useApiState() {
-    var _a = react_1.useState(false), loading = _a[0], setLoading = _a[1];
-    var _b = react_1.useState({
+    var _a = (0, react_1.useState)(false), loading = _a[0], setLoading = _a[1];
+    var _b = (0, react_1.useState)({
         message: "",
         messages: [],
         details: {},
     }), apiError = _b[0], setApiError = _b[1];
-    var _c = react_1.useState(false), isError = _c[0], setIsError = _c[1];
-    var _d = react_1.useState(0), statusCode = _d[0], setStatusCode = _d[1];
+    var _c = (0, react_1.useState)(false), isError = _c[0], setIsError = _c[1];
+    var _d = (0, react_1.useState)(0), statusCode = _d[0], setStatusCode = _d[1];
     var handleError = function (error) {
         var _a;
         setStatusCode((_a = error === null || error === void 0 ? void 0 : error.response) === null || _a === void 0 ? void 0 : _a.status);
@@ -73,7 +73,7 @@ function useApiState() {
     var isFailure = function () {
         return !loading && statusCode >= 300;
     };
-    react_1.useEffect(function () {
+    (0, react_1.useEffect)(function () {
         if (loading) {
             // ロード開始時にエラーを消す
             setApiError({ messages: [], details: {}, message: "" });
@@ -161,8 +161,8 @@ var parseSearchQuery = function (query) {
 function useIndexApi(httpClient, props) {
     var _this = this;
     var _a = useApiState(), loading = _a[0], setLoading = _a[1], apiError = _a[2], handleError = _a[3], isError = _a[4], isSuccess = _a[5], isFailure = _a[6], statusCode = _a[7], setStatusCode = _a[8];
-    var _b = react_1.useState(props.initialResponse), response = _b[0], setResponse = _b[1];
-    var _c = react_1.useReducer(indexReducer, props.initialState
+    var _b = (0, react_1.useState)(props.initialResponse), response = _b[0], setResponse = _b[1];
+    var _c = (0, react_1.useReducer)(indexReducer, props.initialState
         ? __assign(__assign({}, initialIndexState), props.initialState) : initialIndexState), indexApiState = _c[0], dispatch = _c[1];
     var setPage = function (page) {
         dispatch({ type: IndexApiAction.SET_PAGE, payload: page });
@@ -227,7 +227,7 @@ function useIndexApi(httpClient, props) {
                         page: pageSet.page,
                         perPage: pageSet.perPage,
                         q: {
-                            s: snakeCase(indexApiState.orderBy) + " " + indexApiState.order,
+                            s: "".concat(snakeCase(indexApiState.orderBy), " ").concat(indexApiState.order),
                         },
                     });
                     if (options === null || options === void 0 ? void 0 : options.params) {
@@ -238,7 +238,7 @@ function useIndexApi(httpClient, props) {
                         else {
                             params = __assign(__assign({}, params), options.params);
                         }
-                        params.q = __assign(__assign({}, params.q), { s: snakeCase(indexApiState.orderBy) + " " + indexApiState.order });
+                        params.q = __assign(__assign({}, params.q), { s: "".concat(snakeCase(indexApiState.orderBy), " ").concat(indexApiState.order) });
                     }
                     return [4 /*yield*/, httpClient.get(path, params)];
                 case 2:
@@ -277,8 +277,8 @@ exports.useIndexApi = useIndexApi;
 function useShowApi(httpClient, props) {
     var _this = this;
     var _a = useApiState(), loading = _a[0], setLoading = _a[1], apiError = _a[2], handleError = _a[3], isError = _a[4], isSuccess = _a[5], isFailure = _a[6], statusCode = _a[7], setStatusCode = _a[8];
-    var _b = react_1.useState(props.initialResponse), response = _b[0], setResponse = _b[1];
-    var execute = react_1.useCallback(function (apiPath, params) { return __awaiter(_this, void 0, void 0, function () {
+    var _b = (0, react_1.useState)(props.initialResponse), response = _b[0], setResponse = _b[1];
+    var execute = (0, react_1.useCallback)(function (apiPath, params) { return __awaiter(_this, void 0, void 0, function () {
         var result, data_2, e_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -321,7 +321,7 @@ exports.useShowApi = useShowApi;
 function usePostApi(httpClient, props) {
     var _this = this;
     var _a = useApiState(), loading = _a[0], setLoading = _a[1], apiError = _a[2], handleError = _a[3], isError = _a[4], isSuccess = _a[5], isFailure = _a[6], statusCode = _a[7], setStatusCode = _a[8];
-    var _b = react_1.useState(props.initialResponse), response = _b[0], setResponse = _b[1];
+    var _b = (0, react_1.useState)(props.initialResponse), response = _b[0], setResponse = _b[1];
     var execute = function (apiPath, form) { return __awaiter(_this, void 0, void 0, function () {
         var result, data_3, e_3;
         return __generator(this, function (_a) {
@@ -369,7 +369,7 @@ exports.usePostApi = usePostApi;
 function usePatchApi(httpClient, props) {
     var _this = this;
     var _a = useApiState(), loading = _a[0], setLoading = _a[1], apiError = _a[2], handleError = _a[3], isError = _a[4], isSuccess = _a[5], isFailure = _a[6], statusCode = _a[7], setStatusCode = _a[8];
-    var _b = react_1.useState(props.initialResponse), response = _b[0], setResponse = _b[1];
+    var _b = (0, react_1.useState)(props.initialResponse), response = _b[0], setResponse = _b[1];
     var execute = function (apiPath, params) { return __awaiter(_this, void 0, void 0, function () {
         var result, data_4, e_4;
         return __generator(this, function (_a) {
@@ -416,7 +416,7 @@ exports.usePatchApi = usePatchApi;
 function useDeleteApi(httpClient, props) {
     var _this = this;
     var _a = useApiState(), loading = _a[0], setLoading = _a[1], apiError = _a[2], handleError = _a[3], isError = _a[4], isSuccess = _a[5], isFailure = _a[6], statusCode = _a[7], setStatusCode = _a[8];
-    var _b = react_1.useState(props.initialResponse), response = _b[0], setResponse = _b[1];
+    var _b = (0, react_1.useState)(props.initialResponse), response = _b[0], setResponse = _b[1];
     var execute = function (apiPath) { return __awaiter(_this, void 0, void 0, function () {
         var result, data_5, e_5;
         return __generator(this, function (_a) {
