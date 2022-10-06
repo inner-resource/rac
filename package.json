@@ -1,6 +1,6 @@
 {
   "name": "rac",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "reprua api component",
   "main": "dist/index.js",
   "author": "YutoTani",

@@ -43,6 +43,7 @@ function useForm(initialForm, modelName) {
         setter(copledForm);
         setForm(function () { return copledForm; });
     };
+    /** @deprecated */
     var updateObject = function (attr, value) {
         var copledForm = copyForm();
         if (copledForm instanceof Object) {
@@ -77,17 +78,57 @@ function useForm(initialForm, modelName) {
         }
         setForm(function () { return copledForm; });
     };
+    var newUpdateObject = function (attr, value) {
+        var copiedForm = copyForm();
+        if (copiedForm instanceof Object) {
+            if (attr instanceof Array) {
+                var selectObj_2 = copiedForm;
+                attr.map(function (a, index) {
+                    if (index + 1 == attr.length) {
+                        if (typeof value === "boolean") {
+                            selectObj_2[a] = value;
+                        }
+                        else if (!value && (typeof value != "number" || isNaN(value))) {
+                            selectObj_2[a] = "";
+                        }
+                        else {
+                            selectObj_2[a] = value;
+                        }
+                    }
+                    else {
+                        selectObj_2 = selectObj_2[a];
+                    }
+                });
+            }
+            else {
+                var selectObj = copiedForm;
+                if (typeof value === "boolean") {
+                    selectObj[attr] = value;
+                }
+                else if (!value && (typeof value != "number" || isNaN(value))) {
+                    selectObj[attr] = "";
+                }
+                else {
+                    selectObj[attr] = value;
+                }
+            }
+        }
+        else {
+            throw "updateArray method require form type object";
+        }
+        setForm(function () { return copiedForm; });
+    };
     var getObjectValue = function (attr) {
         var returnValue = null;
         if (form instanceof Object) {
             if (attr instanceof Array) {
-                var selectObj_2 = form;
+                var selectObj_3 = form;
                 attr.map(function (a, index) {
                     if (index + 1 == attr.length) {
-                        returnValue = selectObj_2[a];
+                        returnValue = selectObj_3[a];
                     }
                     else {
-                        selectObj_2 = selectObj_2[a];
+                        selectObj_3 = selectObj_3[a];
                     }
                 });
             }
@@ -110,6 +151,7 @@ function useForm(initialForm, modelName) {
         set: setForm,
         update: updateForm,
         updateObject: updateObject,
+        newUpdateObject: newUpdateObject,
         getValue: getValue,
         resetForm: resetForm,
     };

@@ -7,6 +7,8 @@ export declare type Form<T> = {
     set: Dispatch<SetStateAction<T>>;
     update: (setter: (f: T) => void) => void;
     updateObject: (attr: FormAttrType<T>, value: ParseableValue) => void;
+    /** @deprecated */
+    newUpdateObject: (attr: FormAttrType<T>, value: ParseableValue) => void;
     getValue: (attr: FormAttrType<T>) => ParseableValue;
     resetForm: () => void;
 };

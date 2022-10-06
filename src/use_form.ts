@@ -17,6 +17,8 @@ export type Form<T> = {
   set: Dispatch<SetStateAction<T>>;
   update: (setter: (f: T) => void) => void;
   updateObject: (attr: FormAttrType<T>, value: ParseableValue) => void;
+  /** @deprecated */
+  newUpdateObject: (attr: FormAttrType<T>, value: ParseableValue) => void;
   getValue: (attr: FormAttrType<T>) => ParseableValue;
   resetForm: () => void;
 };
@@ -59,6 +61,7 @@ export function useForm<T>(initialForm: T, modelName?: string): Form<T> {
     setForm(() => copledForm!);
   };
 
+  /** @deprecated */
   const updateObject = (attr: FormAttrType<T>, value: ParseableValue): void => {
     let copledForm: T = copyForm();
     if (copledForm instanceof Object) {
@@ -88,6 +91,41 @@ export function useForm<T>(initialForm: T, modelName?: string): Form<T> {
     }
 
     setForm(() => copledForm!);
+  };
+
+  const newUpdateObject = (attr: FormAttrType<T>, value: ParseableValue): void => {
+    let copiedForm: T = copyForm();
+    if (copiedForm instanceof Object) {
+      if (attr instanceof Array) {
+        let selectObj = copiedForm as { [key: string]: any };
+        attr.map((a, index) => {
+          if (index + 1 == attr.length) {
+            if (typeof value === "boolean") {
+              selectObj[a] = value;
+            } else if (!value && (typeof value != "number" || isNaN(value))) {
+              selectObj[a] = "";
+            } else {
+              selectObj[a] = value;
+            }
+          } else {
+            selectObj = selectObj[a] as { [key: string]: any };
+          }
+        });
+      } else {
+        let selectObj = copiedForm as { [key: string]: any };
+
+        if (typeof value === "boolean") {
+          selectObj[attr as string] = value;
+        } else if (!value && (typeof value != "number" || isNaN(value))) {
+          selectObj[attr as string] = "";
+        } else {
+          selectObj[attr as string] = value;
+        }
+      }
+    } else {
+      throw "updateArray method require form type object";
+    }
+    setForm(function () { return copiedForm; });
   };
 
   const getObjectValue = (attr: FormAttrType<T>): ParseableValue => {
@@ -122,6 +160,7 @@ export function useForm<T>(initialForm: T, modelName?: string): Form<T> {
     set: setForm,
     update: updateForm,
     updateObject: updateObject,
+    newUpdateObject: newUpdateObject,
     getValue: getValue,
     resetForm: resetForm,
   };
